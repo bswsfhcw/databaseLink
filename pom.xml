@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.youotech</groupId>
+	<artifactId>databaseLink</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+	<name>databaseLink</name>
+	<description>Demo project for Spring Boot</description>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.7.RELEASE</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>1.8</java.version>
+		<!-- maven方式跳过maven test, 等同$ mvn package -Dmaven.test.skip=true -->
+		<!-- <maven.test.skip>true</maven.test.skip> -->
+		<!-- surefire plugin方式跳过maven test， 等同$ mvn package -DskipTests -->
+		<skipTests>true</skipTests>
+	</properties>
+
+	<dependencies>
+		 <!-- 热部署模块 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional> <!-- 这个需要为 true 热部署才有效 -->
+        </dependency>
+        <!-- redis -->
+		<!-- <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency> -->
+		<!-- junit-->
+		<!-- <dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency> -->
+		<!-- <dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc6</artifactId>
+			<version>11.2.0.1.0</version>
+		</dependency> -->
+		<!-- <dependency>
+		    <groupId>com.oracle</groupId>
+		    <artifactId>ojdbc14</artifactId>
+		    <version>10.2.0.1.0</version>
+		</dependency> -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.microsoft.sqlserver</groupId>
+		    <artifactId>mssql-jdbc</artifactId>
+		    <version>6.2.0.jre8</version>
+		    <scope>runtime</scope>
+		</dependency>
+		<!-- jdbc -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<!-- pkts -->
+		<!-- <dependency>
+			<groupId>io.pkts</groupId>
+			<artifactId>pkts-streams</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>io.pkts</groupId>
+			<artifactId>pkts-core</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			</dependency>
+			<dependency>
+			<groupId>io.github.hengyunabc</groupId>
+			<artifactId>zabbix-api</artifactId>
+			<version>0.0.1</version>
+		</dependency> -->
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<mainClass>${start-class}</mainClass>
+					<layout>ZIP</layout>
+					<executable>true</executable>
+					<includes>
+						<include>
+							<groupId>nothing</groupId>
+							<artifactId>nothing</artifactId>
+						</include>
+					</includes>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+				     <execution>
+						<id>copy-dll</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/databaseLink/bin</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}</directory>
+									<includes>
+										<include>*.dll</include>
+										<include>*.so</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution> 
+					
+					<execution>
+						<id>copy-liblocal</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/databaseLink/lib</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/lib</directory>
+									<includes>
+										<include>*.jar</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-conf</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/databaseLink/conf</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/resources</directory>
+									<includes>
+										<include>*.properties</include>
+										<include>*.yml</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-bin</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/databaseLink/bin</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/bin</directory>
+									<includes>
+										<include>*.sh</include>
+										<include>*.bat</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-jar</id>
+						<phase>process-sources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/databaseLink/</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/target</directory>
+									<includes>
+										<include>*.jar</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy-dependencies</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/target/databaseLink/lib/</outputDirectory>
+						</configuration>
+					</execution> 
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

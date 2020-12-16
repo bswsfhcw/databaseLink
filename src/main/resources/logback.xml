@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration>
+ 	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+ 		<encoder>
+ 			<pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level%logger{36} [%file:%line] - %msg%n
+ 			</pattern>
+		</encoder>
+ 	</appender>
+	<appender name="rollingFile"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<!-- <file>./logs/audioAnalysis.log</file> -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>../logs/databaseLink.log.%d{yyyy-MM-dd}.log
+			</fileNamePattern>
+		</rollingPolicy>
+		<encoder>
+			<!-- <pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level -->
+			<!-- %logger{36} - %msg%n -->
+			<!-- </pattern> -->
+			<pattern>%msg%n</pattern>
+			<charset class="java.nio.charset.Charset">utf-8</charset>
+		</encoder>
+	</appender>
+	<appender name="ASYNC_Queue" class="ch.qos.logback.classic.AsyncAppender">
+		<discardingThreshold>0</discardingThreshold>
+		<queueSize>1000</queueSize>
+		<appender-ref ref="rollingFile" />
+	</appender>
+
+	<root level="info">
+		<appender-ref ref="ASYNC_Queue" />
+ 		<appender-ref ref="console" />
+	</root>
+</configuration>
