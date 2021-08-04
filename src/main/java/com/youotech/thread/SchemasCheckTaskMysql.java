@@ -21,10 +21,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 /**
- * 
- * @author bswsfhcw
- *
- */
+* @Description: SchemasCheckTaskMysql
+* @author: bwsfhcw
+* @date: 2020/8/4 13:58
+*/
 @Component
 @Order(1)
 public class SchemasCheckTaskMysql implements DisposableBean, Runnable,CommandLineRunner  {
@@ -52,7 +52,7 @@ public class SchemasCheckTaskMysql implements DisposableBean, Runnable,CommandLi
 			return;
 		}
 //		LOGGER.info("user.dir："+System.getProperty("user.dir"));
-		String fileName=checkSchemasDir+"\\mysql.text";
+		String fileName=checkSchemasDir+"\\mysql.txt";
 		Map<String, Map<String, Object>> mapSchemaTableColumn=new HashMap<String, Map<String,Object>>();
 		clearInfoForFile(fileName);
 		try {
@@ -64,6 +64,8 @@ public class SchemasCheckTaskMysql implements DisposableBean, Runnable,CommandLi
 					schema+=",";
 				}
 			}
+			LOGGER.info("对比schema:"+schema);
+			appendInfoToFile(fileName, "对比schema;"+schema);
 			//查所有库的表集合
 			String sql_alltables="SELECT DISTINCT TABLE_NAME tbname FROM information_schema.TABLES where TABLE_SCHEMA in ("+schema+") ";
 			LOGGER.info("sql_alltables:" + jdbcTemplate);
@@ -74,8 +76,8 @@ public class SchemasCheckTaskMysql implements DisposableBean, Runnable,CommandLi
 			String sql_columns;
 			/**
 			 * 遍历所有库
-			 * 		找到各自没有的表
-			 * 		取所有表字段信息
+			 * 找到各自没有的表
+			 * 取所有表字段信息
 			 */
 			for (int i = 0; i < schemas.length; i++) {
 				sql_notables = sql_alltables +
@@ -164,7 +166,7 @@ public class SchemasCheckTaskMysql implements DisposableBean, Runnable,CommandLi
 				}
 			}
 		} catch (Exception e) {
-				e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 
@@ -176,6 +178,14 @@ public class SchemasCheckTaskMysql implements DisposableBean, Runnable,CommandLi
 	public void run(String... arg0) throws Exception {
 		this.thread.start();
 	}
+	/*
+	* @Description: action file
+	* @author: bwsfhcw
+	* @date: 2020/8/4 13:59
+	* @param fileName:
+	* @param info:
+	* @Return: void
+	*/
 	 public static void appendInfoToFile(String fileName, String info) {
 	    File file =new File(fileName);
 	    try {
